@@ -1,0 +1,34 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@5.4.1
+  terraform: circleci/terraform@3.7.0
+
+workflows:
+  validate_and_deploy:
+    jobs:
+      - validate_and_format_terraform
+      - deploy_terraform:
+          requires:
+            - validate_and_format_terraform
+
+jobs:
+  validate_and_format_terraform:
+    executor: terraform/default
+    steps:
+      - checkout
+      - terraform/init
+      - run:
+          name: Format Terraform
+          command: terraform fmt -recursive
+      - terraform/validate
+
+  deploy_terraform:
+    executor: terraform/default
+    steps:
+	    - context: dev-iac
+      - checkout
+      - aws-cli/setup
+      - terraform/init
+      - terraform/plan
+      - terraform/apply
