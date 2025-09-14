@@ -9,6 +9,7 @@ workflows:
     jobs:
       - validate_and_format_terraform
       - deploy_terraform:
+          context: dev-iac
           requires:
             - validate_and_format_terraform
 
@@ -26,7 +27,6 @@ jobs:
   deploy_terraform:
     executor: terraform/default
     steps:
-      - context: dev-iac
       - checkout
       - aws-cli/setup
       - terraform/init
