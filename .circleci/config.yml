@@ -26,7 +26,7 @@ jobs:
   deploy_terraform:
     executor: terraform/default
     steps:
-      - context: dev
+      - context: dev-iac
       - checkout
       - aws-cli/setup
       - terraform/init
